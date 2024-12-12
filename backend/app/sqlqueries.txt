@@ -1,0 +1,38 @@
+# Enter PostgreSQL shell
+docker-compose exec db psql -U gameuser -d gamedb
+
+# Then run these commands
+INSERT INTO players (name) VALUES ('JohnDoe');
+INSERT INTO scores (player_id, score) VALUES (
+    (SELECT id FROM players WHERE name = 'JohnDoe'), 
+    1500
+);
+
+# To verify
+SELECT * FROM players;
+SELECT * FROM scores;
+
+-- Insert multiple players
+INSERT INTO players (name) VALUES 
+    ('Player1'),
+    ('Player2'),
+    ('Player3');
+
+-- Insert multiple scores
+INSERT INTO scores (player_id, score) VALUES 
+    ((SELECT id FROM players WHERE name = 'Player1'), 1000),
+    ((SELECT id FROM players WHERE name = 'Player2'), 1500),
+    ((SELECT id FROM players WHERE name = 'Player3'), 2000);
+
+-- Query to View Leaderboard:
+SELECT 
+    p.name AS player_name, 
+    s.score, 
+    s.timestamp
+FROM 
+    scores s
+JOIN 
+    players p ON s.player_id = p.id
+ORDER BY 
+    s.score DESC
+LIMIT 10;
