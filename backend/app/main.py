@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List
 
@@ -23,8 +23,32 @@ def read_root():
 
 # Check player name availability
 @app.get("/players/check", response_model=bool)
-def check_player_name(name: str, db: Session = Depends(get_db)):
-    """Check if player name is available"""
+def check_player_name(
+    name: str = Query(
+        ..., 
+        min_length=1, 
+        max_length=50, 
+        description="Player name to check"
+        )
+    , db: Session = Depends(get_db)
+):
+    """
+    Check if player name is available
+    
+    - Requires a non-empty name
+    - Name must be between 1 and 50 characters
+    - Trims whitespace
+    """
+    # Trim whitespace and validate
+    cleaned_name = name.strip()
+    
+    if not cleaned_name:
+        raise HTTPException(
+            status_code=400, 
+            detail="Player name cannot be empty or just whitespace"
+        ) 
+        return False
+
     player = crud.get_player_by_name(db, name)
     return player is None
 
