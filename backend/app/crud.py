@@ -18,10 +18,14 @@ def create_player_score(db: Session, score: schemas.ScoreCreate):
     if not db_player:
         db_player = create_player(db, schemas.PlayerCreate(name=score.player_name))
     
+    # Create the score entry
     db_score = models.Score(player_id=db_player.id, score=score.score)
     db.add(db_score)
     db.commit()
     db.refresh(db_score)
+
+    # Add player name explicitly to the score object for response construction
+    db_score.player_name = db_player.name
     return db_score
 
 def get_leaderboard(db: Session, limit: int = 10):
