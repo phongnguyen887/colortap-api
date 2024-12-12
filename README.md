@@ -10,6 +10,11 @@
 ```bash
 docker-compose up --build
 ```
+### Down and prune volume
+```bash
+docker-compose down --volumes
+docker system prune --volumes
+```
 
 ### Accessing the Application
 - API: http://localhost:8000
