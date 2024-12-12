@@ -16,6 +16,11 @@ docker-compose down --volumes
 docker system prune --volumes
 ```
 
+### Connect to PostgresSQL
+```bash
+docker-compose exec db psql postgresql://gameuser:gamepassword@localhost/gamedb
+```
+
 ### Accessing the Application
 - API: http://localhost:8000
 - Swagger Docs: http://localhost:8000/docs
