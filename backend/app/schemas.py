@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 
 class PlayerCreate(BaseModel):
-    name: str = Field(..., min_length=3, max_length=50)
+    name: str = Field(..., min_length=2, max_length=50)
 
 class PlayerResponse(BaseModel):
     id: int
